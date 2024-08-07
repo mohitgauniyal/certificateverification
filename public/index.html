@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Verification</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { text-align: center; }
+        input { padding: 10px; margin: 10px; }
+        button { padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Certificate Verification</h1>
+        <input type="text" id="certificateNumber" placeholder="Enter Certificate Number">
+        <button onclick="verifyCertificate()">Submit</button>
+        <a id="downloadLink" style="display: none;">Download PDF</a>
+    </div>
+    <script>
+        async function verifyCertificate() {
+            const certificateNumber = document.getElementById('certificateNumber').value;
+            const response = await fetch('/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ certificateNumber })
+            });
+            const result = await response.json();
+            if (result.success) {
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = result.pdfUrl;
+                downloadLink.style.display = 'block';
+                downloadLink.textContent = 'Download PDF';
+            } else {
+                alert('Certificate number is incorrect.');
+            }
+        }
+    </script>
+</body>
+</html>
